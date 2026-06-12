@@ -6,27 +6,18 @@ Hold your configured hotkey, speak, release — text appears directly in the ope
 
 ## Prerequisites
 
-- [whisper-anywhere](https://github.com/misiekhardcore/whisper-anywhere) must be installed
+- [whisper-anywhere](https://github.com/misiekhardcore/whisper-anywhere) must be installed and working
+- opencode must be installed
 
 ## Install
 
-### Global install (works in any project)
-
 ```bash
+git clone https://github.com/misiekhardcore/whisper-anywhere-opencode
 mkdir -p ~/.config/opencode/plugins
-cp whisper-anywhere.ts ~/.config/opencode/plugins/
+cp whisper-anywhere-opencode/whisper-anywhere.ts ~/.config/opencode/plugins/
 ```
 
 opencode auto-discovers plugins in `~/.config/opencode/plugins/` — no config changes needed.
-
-### Per-project install
-
-Copy the plugin to your project's `.opencode/plugins/`:
-
-```bash
-mkdir -p .opencode/plugins
-cp whisper-anywhere.ts .opencode/plugins/
-```
 
 ## Usage
 
@@ -38,3 +29,9 @@ cp whisper-anywhere.ts .opencode/plugins/
 ## How it works
 
 The plugin spawns `whisper-anywhere --stdout` as a child process. When you release the hotkey, whisper-anywhere writes `{"text": "..."}` as a JSON line to stdout. The plugin reads this line and injects the text into the opencode TUI via `client.tui.appendPrompt()`.
+
+When the plugin is not loaded (opencode not running), whisper-anywhere falls back to ydotool for global hotkey typing.
+
+## License
+
+MIT
