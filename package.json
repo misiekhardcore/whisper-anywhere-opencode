@@ -3,23 +3,25 @@
   "version": "1.3.2",
   "description": "opencode plugin for whisper-anywhere voice dictation",
   "type": "module",
-  "main": "dist/whisper-anywhere.js",
+  "main": "dist/index.js",
   "exports": {
     ".": {
-      "import": "./dist/whisper-anywhere.js",
-      "types": "./whisper-anywhere.ts"
+      "import": "./dist/index.js",
+      "types": "./src/index.ts"
     }
   },
   "files": [
     "dist",
-    "whisper-anywhere.ts"
+    "package.json"
   ],
   "keywords": [
     "opencode",
     "plugin",
     "voice",
     "dictation",
-    "whisper"
+    "whisper",
+    "local",
+    "standalone"
   ],
   "license": "MIT",
   "repository": {
@@ -31,7 +33,9 @@
   },
   "homepage": "https://github.com/misiekhardcore/whisper-anywhere-opencode#readme",
   "scripts": {
-    "build": "bun build whisper-anywhere.ts --outdir=dist --target=bun --external='@opencode-ai/plugin' --format=esm",
+    "build": "bunx tsc",
+    "dev": "tsc --watch",
+    "typecheck": "tsc --noEmit",
     "prepublishOnly": "bun run build"
   },
   "devDependencies": {
@@ -39,5 +43,12 @@
     "@types/node": "^25.9.3",
     "bun-types": "^1.3.14",
     "typescript": "^6.0.3"
+  },
+  "opencode": {
+    "type": "plugin",
+    "hooks": [
+      "chat.message",
+      "event"
+    ]
   }
 }
