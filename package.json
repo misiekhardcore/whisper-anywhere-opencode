@@ -3,11 +3,15 @@
   "version": "1.1.0",
   "description": "opencode plugin for whisper-anywhere voice dictation",
   "type": "module",
-  "main": "whisper-anywhere.ts",
+  "main": "dist/whisper-anywhere.js",
   "exports": {
-    ".": "./whisper-anywhere.ts"
+    ".": {
+      "import": "./dist/whisper-anywhere.js",
+      "types": "./whisper-anywhere.ts"
+    }
   },
   "files": [
+    "dist",
     "whisper-anywhere.ts"
   ],
   "keywords": [
@@ -26,6 +30,10 @@
     "url": "https://github.com/misiekhardcore/whisper-anywhere-opencode/issues"
   },
   "homepage": "https://github.com/misiekhardcore/whisper-anywhere-opencode#readme",
+  "scripts": {
+    "build": "bun build whisper-anywhere.ts --outdir=dist --target=bun --external='@opencode-ai/plugin' --format=esm",
+    "prepublishOnly": "bun run build"
+  },
   "devDependencies": {
     "@opencode-ai/plugin": "^1.17.4",
     "@types/node": "^25.9.3",
