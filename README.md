@@ -1,0 +1,40 @@
+# whisper-anywhere-opencode
+
+[opencode](https://opencode.ai) plugin for [whisper-anywhere](https://github.com/misiekhardcore/whisper-anywhere) voice dictation.
+
+Hold your configured hotkey, speak, release — text appears directly in the opencode TUI chat input.
+
+## Prerequisites
+
+- [whisper-anywhere](https://github.com/misiekhardcore/whisper-anywhere) must be installed
+
+## Install
+
+### Global install (works in any project)
+
+```bash
+mkdir -p ~/.config/opencode/plugins
+cp whisper-anywhere.ts ~/.config/opencode/plugins/
+```
+
+opencode auto-discovers plugins in `~/.config/opencode/plugins/` — no config changes needed.
+
+### Per-project install
+
+Copy the plugin to your project's `.opencode/plugins/`:
+
+```bash
+mkdir -p .opencode/plugins
+cp whisper-anywhere.ts .opencode/plugins/
+```
+
+## Usage
+
+1. Start opencode — the plugin spawns `whisper-anywhere --stdout` automatically
+2. Press your configured whisper-anywhere hotkey, speak, release
+3. Transcribed text appears in the TUI chat input
+4. Type `/voice` to toggle dictation on/off
+
+## How it works
+
+The plugin spawns `whisper-anywhere --stdout` as a child process. When you release the hotkey, whisper-anywhere writes `{"text": "..."}` as a JSON line to stdout. The plugin reads this line and injects the text into the opencode TUI via `client.tui.appendPrompt()`.
