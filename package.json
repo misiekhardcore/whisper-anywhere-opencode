@@ -1,6 +1,6 @@
 {
   "name": "whisper-anywhere-opencode",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "opencode plugin for whisper-anywhere voice dictation",
   "type": "module",
   "main": "whisper-anywhere.ts",
