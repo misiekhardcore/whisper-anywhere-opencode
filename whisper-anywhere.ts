@@ -41,7 +41,7 @@ export default (async ({ client }) => {
 
   return {
     "command.execute.before": async (input, output) => {
-      if (input.command === "voice") {
+      if (input.command === "/voice") {
         voiceEnabled = !voiceEnabled;
         const status = voiceEnabled ? "enabled" : "disabled";
         await client.tui.showToast({
