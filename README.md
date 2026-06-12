@@ -11,6 +11,22 @@ Hold your configured hotkey, speak, release — text appears directly in the ope
 
 ## Install
 
+### Via npm (recommended)
+
+```bash
+npm install -g whisper-anywhere-opencode
+```
+
+Then add to your `opencode.json`:
+
+```json
+{
+  "plugin": ["whisper-anywhere-opencode"]
+}
+```
+
+### Via file copy (no npm needed)
+
 ```bash
 git clone https://github.com/misiekhardcore/whisper-anywhere-opencode
 mkdir -p ~/.config/opencode/plugins
