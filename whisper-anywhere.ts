@@ -1,4 +1,4 @@
-import type { Plugin, TuiPlugin } from "@opencode-ai/plugin";
+import type { Plugin } from "@opencode-ai/plugin";
 
 const createPlugin = () => {
   let voiceEnabled = true;
@@ -67,7 +67,7 @@ const server: Plugin = async ({ client }) => {
 };
 
 // TUI plugin — satisfies desktop app loader, delegates to server plugin
-const tui: TuiPlugin = async (api) => {
+const tui = async (api: any) => {
   const state = createPlugin();
   state.startDaemon(api.client);
 
