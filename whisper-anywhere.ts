@@ -1,9 +1,9 @@
-import type { Plugin } from "@opencode-ai/plugin";
+import type { Plugin, TuiPlugin } from "@opencode-ai/plugin";
 
-export default (async ({ client }) => {
+const createPlugin = () => {
   let voiceEnabled = true;
 
-  const startDaemon = async () => {
+  const startDaemon = async (client: any) => {
     const proc = Bun.spawn(["whisper-anywhere", "--stdout"], {
       stdout: "pipe",
       stderr: "inherit",
@@ -37,22 +37,59 @@ export default (async ({ client }) => {
     readLoop();
   };
 
-  startDaemon();
+  return {
+    getVoiceEnabled: () => voiceEnabled,
+    toggleVoice: () => {
+      voiceEnabled = !voiceEnabled;
+      return voiceEnabled;
+    },
+    startDaemon,
+  };
+};
+
+// Server plugin — hooks into server events
+const server: Plugin = async ({ client }) => {
+  const state = createPlugin();
+  state.startDaemon(client);
 
   return {
     "command.execute.before": async (input, output) => {
       if (input.command === "/voice") {
-        voiceEnabled = !voiceEnabled;
-        const status = voiceEnabled ? "enabled" : "disabled";
+        const enabled = state.toggleVoice();
         await client.tui.showToast({
-          body: {
-            message: `Voice dictation ${status}`,
-            variant: "info",
-          },
+          body: { message: `Voice dictation ${enabled ? "enabled" : "disabled"}`, variant: "info" },
         });
         output.parts = [];
       }
     },
     dispose: async () => {},
   };
-}) satisfies Plugin;
+};
+
+// TUI plugin — satisfies desktop app loader, delegates to server plugin
+const tui: TuiPlugin = async (api) => {
+  const state = createPlugin();
+  state.startDaemon(api.client);
+
+  api.keymap.registerLayer({
+    commands: [
+      {
+        title: "Toggle voice dictation",
+        value: "voice.toggle",
+        description: "Enable or disable voice dictation",
+        slash: { name: "voice" },
+        onSelect: () => {
+          const enabled = state.toggleVoice();
+          api.ui.toast({
+            message: `Voice dictation ${enabled ? "enabled" : "disabled"}`,
+            variant: "info",
+          });
+        },
+      },
+    ],
+    bindings: [],
+  });
+};
+
+export default server;
+export { server, tui };
